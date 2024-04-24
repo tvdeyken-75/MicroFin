@@ -1,30 +1,14 @@
-from django.urls import path
-from facturen.views import (
-        home,
-        klanten_lijst,
-        facturen_lijst,
-        adressen_lijst,
-        create_factuur,
-        create_adres,
-        create_klant,
-        delete_adres,
-        delete_klant
-    )
+from django.urls import include, path
+from rest_framework.routers import DefaultRouter
+from .views import AdresViewSet, KlantViewSet, FactuurViewSet, FactuurRegelViewSet, AnnuleringViewSet
 
-app_name = 'facturen'
+router = DefaultRouter()
+router.register(r'adressen', AdresViewSet)
+router.register(r'klanten', KlantViewSet)
+router.register(r'facturen', FactuurViewSet)
+router.register(r'factuurregels', FactuurRegelViewSet)
+router.register(r'annuleringen', AnnuleringViewSet)
 
 urlpatterns = [
-    path('', home, name='home'),
-    path('klanten-lijst/', klanten_lijst, name='klanten-lijst'),
-    path('facturen-lijst/', facturen_lijst, name='facturen-lijst'),
-    path('adressen-lijst/', adressen_lijst, name='adressen-lijst'),
-    
-    path('maak-factuur/', create_factuur, name='maak-factuur'),
-    path('maak-adres/', create_adres, name='maak-adres'),
-    path('maak-klant/', create_klant, name='maak-klant'),
-    
-    path('delete-adres/<int:pk>/', delete_adres, name='delete-adres'),
-    path('delete-klant/<int:pk>/', delete_klant, name='delete-klant'),
+    path('', include(router.urls)),
 ]
-
-

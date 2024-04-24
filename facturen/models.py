@@ -46,7 +46,7 @@ class Factuur(models.Model):
 
     factuurnummer = models.CharField(max_length=50, editable=False)
     klant = models.ForeignKey(Klant, on_delete=models.CASCADE)
-    factuurdatum = models.DateField(auto_now=True)
+    factuurdatum = models.DateTimeField(auto_now_add=True)
     verzenddatum = models.DateField(null=True, blank=True)
     betaaldatum = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=10, choices=FactuurStatus.choices, default=FactuurStatus.OPEN)
@@ -58,7 +58,13 @@ class Factuur(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.factuurnummer:
-            self.factuurnummer = 'T-' + str(uuid.uuid4().int)[:6]  # Randomly generate number
+            # Generate the next number for the factuur start with 7000 and increment by 1 for each new factuur add the prefix "T-"
+            last_factuur = Factuur.objects.order_by('-id').first()
+            if last_factuur:
+                next_number = int(last_factuur.factuurnummer[2:]) + 1
+            else:
+                next_number = 7000
+            self.factuurnummer = f"T-{next_number:06d}" # Format the number with leading zeros (4 digits)
         super().save(*args, **kwargs)
         
     def __str__(self):
@@ -72,7 +78,7 @@ class FactuurRegel(models.Model):
     factuur = models.ForeignKey(Factuur, on_delete=models.CASCADE, related_name='regel_factuur')
     uitvoerdatum = models.DateField()
     uitvoerreferentie = models.CharField(max_length=255)
-    opmerking = models.TextField(blank=True, null=True)
+    opmerking = models.TextField(blank=True, null=True, default='')
     subbedrag = models.DecimalField(max_digits=10, decimal_places=2)
     extra = models.DecimalField(max_digits=10, decimal_places=2)
     regelbedrag = models.DecimalField(max_digits=10, decimal_places=2)

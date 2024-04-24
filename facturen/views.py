@@ -1,93 +1,117 @@
-from django.shortcuts import render, redirect
-from .forms import FactuurForm, FactuurRegelFormSet, AdresForm, KlantForm
-from .models import Factuur, FactuurRegel, Annulering, Klant, Adres
+from rest_framework import viewsets
+from .models import Adres, Klant, Factuur, FactuurRegel, Annulering
+from .serializers import AdresSerializer, KlantSerializer, FactuurSerializer, FactuurRegelSerializer, AnnuleringSerializer
 
 
-# Create a home page view
-
-def home(request):
+def index(request):
     return render(request, 'facturen/index.html')
-
-def facturen_lijst(request):
-    facturen = Factuur.objects.all()
-    return render(request, 'facturen/facturen-lijst.html', {
-        'facturen': facturen
-    })
 
 def klanten_lijst(request):
     klanten = Klant.objects.all()
-    return render(request, 'facturen/klanten-lijst.html', {
-        'klanten': klanten
-    })
+    return render(request, 'facturen/klanten-lijst.html', {'klanten': klanten})
+
+def facturen_lijst(request):
+    facturen = Factuur.objects.all()
+    return render(request, 'facturen/facturen-lijst.html', {'facturen': facturen})
 
 def adressen_lijst(request):
     adressen = Adres.objects.all()
-    return render(request, 'facturen/adressen-lijst.html', {
-        'adressen': adressen
-    })
+    return render(request, 'facturen/adressen-lijst.html', {'adressen': adressen})
 
-def create_factuur(request):
-    if request.method == 'POST':
-        form = FactuurForm(request.POST)
-        formset = FactuurRegelFormSet(request.POST)
-        if form.is_valid() and formset.is_valid():
-            factuur = form.save(commit=False)
-            factuur.user = request.user
-            factuur.save()
-            instances = formset.save(commit=False)
-            for instance in instances:
-                instance.factuur = factuur
-                instance.save()
-            formset.save_m2m()
-            return redirect('facturen:home')  # Verander naar een geldige redirect URL
-        else:
-            print(form.errors, formset.errors)  # Dit zal helpen om te zien wat er mis gaat als er iets niet valideert
-    else:
-        form = FactuurForm()
-        formset = FactuurRegelFormSet(queryset=FactuurRegel.objects.none())
+class AdresViewSet(viewsets.ModelViewSet):
+    queryset = Adres.objects.all()
+    serializer_class = AdresSerializer
 
-    return render(request, 'facturen/maak-factuur.html', {
-        'form': form,
-        'formset': formset
-    })
+
+class KlantViewSet(viewsets.ModelViewSet):
+    queryset = Klant.objects.all()
+    serializer_class = KlantSerializer
+
+class FactuurViewSet(viewsets.ModelViewSet):
+    queryset = Factuur.objects.all()
+    serializer_class = FactuurSerializer
+
+class FactuurRegelViewSet(viewsets.ModelViewSet):
+    queryset = FactuurRegel.objects.all()
+    serializer_class = FactuurRegelSerializer
+
+class AnnuleringViewSet(viewsets.ModelViewSet):
+    queryset = Annulering.objects.all()
+    serializer_class = AnnuleringSerializer
 
 
 
-def create_adres(request):
-    if request.method == 'POST':
-        form = AdresForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('facturen:home')
-    else:
-        form = AdresForm()
+# create views for templates use template names: edit-adres.html, lijst-adressen.html, detail-adres.html, delete-adres.html
 
-    return render(request, 'facturen/maak-adres.html', {
-        'form': form
-    })
+# Adressen CRUD
+def maak_adres(request):
+    return render(request, 'facturen/edit-adres.html')
 
+def delete_adres(request):
+    return render(request, 'facturen/delete-adres.html')
 
-def create_klant(request):
-    if request.method == 'POST':
-        form = KlantForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('facturen:home')
-    else:
-        form = KlantForm()
+def detail_adres(request):
+    return render(request, 'facturen/detail-adres.html')
 
-    return render(request, 'facturen/maak-klant.html', {
-        'form': form
-    })
-    
-def delete_adres(request, pk):
-    adres = Adres.objects.get(id=pk)
-    adres.delete()
-    return redirect('facturen:home')
+def lijst_adressen(request):
+    return render(request, 'facturen/lijst-adressen.html')
 
-def delete_klant(request, pk):
-    klant = Klant.objects.get(id=pk)
-    klant.delete()
-    return redirect('facturen:home')
+def edit_adres(request):
+    return render(request, 'facturen/edit-adres.html')
+
+# Klanten CRUD
+def maak_klant(request):
+    return render(request, 'facturen/edit-klant.html')
+
+def delete_klant(request):
+    return render(request, 'facturen/delete-klant.html')
+
+def detail_klant(request):
+    return render(request, 'facturen/detail-klant.html')
+
+def lijst_klanten(request):
+    return render(request, 'facturen/lijst-klanten.html')
+
+# Facturen CRUD
+
+def maak_factuur(request):
+    return render(request, 'facturen/edit-factuur.html')
+
+def delete_factuur(request):
+    return render(request, 'facturen/delete-factuur.html')
+
+def detail_factuur(request):
+    return render(request, 'facturen/detail-factuur.html')
+
+def lijst_facturen(request):
+    return render(request, 'facturen/lijst-facturen.html')
+
+# FactuurRegels CRUD
+
+def maak_factuurregel(request):
+    return render(request, 'facturen/edit-factuurregel.html')
+
+def delete_factuurregel(request):
+    return render(request, 'facturen/delete-factuurregel.html')
+
+def detail_factuurregel(request):
+    return render(request, 'facturen/detail-factuurregel.html')
+
+def lijst_factuurregels(request):
+    return render(request, 'facturen/lijst-factuurregels.html')
+
+# Annuleringen CRUD
+
+def maak_annulering(request):
+    return render(request, 'facturen/edit-annulering.html')
+
+def delete_annulering(request):
+    return render(request, 'facturen/delete-annulering.html')
+
+def detail_annulering(request):
+    return render(request, 'facturen/detail-annulering.html')
+
+def lijst_annulerings(request):
+    return render(request, 'facturen/lijst-annulerings.html')
 
 
