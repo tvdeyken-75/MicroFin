@@ -1,0 +1,29 @@
+{% extends 'facturen/index.html' %}
+
+{% block title %}Maak Adres{% endblock %}
+
+{% block content %}
+<h2>Maak een Adres</h2>
+<form method="post">
+    {% csrf_token %}
+    <label for="zoeknaam">Zoeknaam</label>
+    <input type="text" id="zoeknaam" name="zoeknaam" required><br>
+    <label for="bedrijfsnaam">Bedrijfsnaam</label>
+    <input type="text" id="bedrijfsnaam" name="bedrijfsnaam"><br>
+    <label for="straat">Straat</label>
+    <input type="text" id="straat" name="straat" required><br>
+    <label for="postcode">Postcode</label>
+    <input type="text" id="postcode" name="postcode" required><br>
+    <label for="plaats">Plaats</label>
+    <input type="text" id="plaats" name="plaats" required><br>
+    <label for="land">Land</label>
+    <input type="text" id="land" name="land" required><br>
+    <label for="koordinaten">Koordinaten</label>
+    <input type="text" id="koordinaten" name="koordinaten"><br>
+    <button type="submit">Submit</button>
+</form>
+{% endblock content %}
+
+
+
+

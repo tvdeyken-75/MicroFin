@@ -1,0 +1,16 @@
+{% extends 'facturen/index.html' %}
+
+{% block content %}
+<h2>Klanten Lijst</h2>
+<a href ="{% url 'facturen:maak-klant' %}">Maak een klant</a>
+<ul class="list-group">
+    {% for klant in klanten %}
+    <li class="list-group-item">
+        <hr>
+        <strong>{{ klant.zoeknaam }} - {{ klant.bedrijfsnaam }} </strong> <br>
+        Kontakt: {{ klant.kontaktpersoon }} - {{ klant.telefoon }} <br>
+        <a href="{% url 'facturen:delete-klant' klant.id %}">Verwijder</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock content %}

@@ -1,0 +1,16 @@
+{% extends 'facturen/index.html' %}
+
+{% block content %}
+<h2>Adressen Lijst</h2>
+<a href ="{% url 'facturen:maak-adres' %}">Maak een adres</a>
+<ul class="list-group">
+    {% for adres in adressen %}
+    <li class="list-group-item">
+        <hr>
+        <strong>{{ adres.zoeknaam }}: {{ adres.bedrijfsnaam }}</strong> <br>
+        {{ adres.straat }}, {{ adres.postcode }} {{ adres.plaats }} <br> {{ adres.land }}
+        <a href="{% url 'facturen:delete-adres' adres.id %}">Verwijder</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock content %}

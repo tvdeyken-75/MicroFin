@@ -1,0 +1,14 @@
+{% extends 'facturen/index.html' %}
+
+{% block content %}
+<h2>Facturen Lijst</h2>
+<a href="{% url 'facturen:maak-factuur' %}">Maak een factuur</a>
+<ul class="list-group">
+    {% for factuur in facturen %}
+    <li class="list-group-item">
+        <hr>
+        {{ factuur.factuurnummer }} - {{ factuur.klant }} - {{ factuur.factuurdatum }} - {{ factuur.totaalbedrag }}
+    </li>
+    {% endfor %}
+</ul>
+{% endblock content %}

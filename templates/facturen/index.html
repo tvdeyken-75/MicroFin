@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block app %}
+<h1>Welkom op de Factuur App</h1>
+<ul>
+    <li><a href="{% url 'facturen:klanten-lijst' %}">Klanten Lijst</a></li>
+    <li><a href="{% url 'facturen:facturen-lijst' %}">Facturen Lijst</a></li>
+    <li><a href="{% url 'facturen:adressen-lijst' %}">Adressen Lijst</a></li>
+</ul>
+{% block content %}
+
+{% endblock content %}
+
+{% endblock app %}
+
+
